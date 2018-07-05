@@ -1,0 +1,120 @@
+---
+grails:
+    profile: rest-api
+    codegen:
+        defaultPackage: top.dteam.earth.backend
+    spring:
+        transactionManagement:
+            proxies: false
+    gorm:
+        reactor:
+            # Whether to translate GORM events into Reactor events
+            # Disabled by default for performance reasons
+            events: false
+        failOnError: true
+info:
+    app:
+        name: '@info.app.name@'
+        version: '@info.app.version@'
+        grailsVersion: '@info.app.grailsVersion@'
+spring:
+    main:
+        banner-mode: "off"
+    groovy:
+        template:
+            check-template-location: false
+
+# Spring Actuator Endpoints are Disabled by Default
+endpoints:
+    enabled: false
+    jmx:
+        enabled: true
+
+---
+grails:
+    mime:
+        disable:
+            accept:
+                header:
+                    userAgents:
+                        - Gecko
+                        - WebKit
+                        - Presto
+                        - Trident
+        types:
+            json:
+              - application/json
+              - text/json
+            hal:
+              - application/hal+json
+              - application/hal+xml
+            xml:
+              - text/xml
+              - application/xml
+            atom: application/atom+xml
+            css: text/css
+            csv: text/csv
+            js: text/javascript
+            rss: application/rss+xml
+            text: text/plain
+            all: '*/*'
+    urlmapping:
+        cache:
+            maxsize: 1000
+    controllers:
+        defaultScope: singleton
+    converters:
+        encoding: UTF-8
+    cors:
+        enabled: true
+
+---
+hibernate:
+    dialect: net.kaleidos.hibernate.PostgresqlExtensionsDialect
+    showSql: true
+    formatSql: true
+    cache:
+        queries: false
+        use_second_level_cache: false
+        use_query_cache: false
+dataSource:
+    type: com.zaxxer.hikari.HikariDataSource
+    pooled: true
+    driverClassName: org.postgresql.Driver
+    properties:
+        maximumPoolSize: 100
+        minimumIdle: 10
+
+---
+server:
+    port: 9002
+
+grails.controllers.upload:
+    maxFileSize: ${UPLOAD_MAX_FILE_SIZE:52428800}
+    maxRequestSize: ${UPLOAD_MAX_FILE_SIZE:52428800}
+
+grails.plugin.databasemigration:
+    updateOnStart: true
+    updateOnStartFileName: 'changelog.groovy'
+
+---
+environments:
+    test:
+        dataSource:
+            dbCreate: create-drop
+            url: jdbc:postgresql://localhost:5432/earth_test?useUnicode=true&characterEncoding=utf8
+            username: earth_admin
+            password: admin
+        grails.plugin.databasemigration.updateOnStart: false
+    development:
+        dataSource:
+            url: jdbc:postgresql://127.0.0.1:5432/earth?useUnicode=true&characterEncoding=utf8
+            username: earth_admin
+            password: admin
+            dbCreate: none
+    production:
+        dataSource:
+            url: ${JDBC_URL:jdbc:postgresql://127.0.0.1:5432/earth?useUnicode=true&characterEncoding=utf8}
+            username: ${DB_USER:earth_admin}
+            password: ${DB_PASS:admin}
+            dbCreate: none

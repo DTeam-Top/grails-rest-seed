@@ -1,0 +1,13 @@
+Thumbs.db
+build/
+out/
+images/
+*.iml
+*.ipr
+*.iws
+*.log
+*.log.*
+.*
+!.gitignore
+!.gitlab-ci.yml
+bin/
