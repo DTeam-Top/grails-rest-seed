@@ -30,7 +30,7 @@
   - 记录登录历史。
   - 口令加密，采用默认的“bcrypt”算法，其已经具备salt功能。
 
-  ## 使用指南
+## 使用指南
 
   1. git clone
   1. 修改相应的包名，目前包的根为：top.dteam.earth.backend
