@@ -34,4 +34,13 @@
 
   1. git clone
   1. 修改相应的包名，目前包的根为：top.dteam.earth.backend
-  1. 自有发挥
+  1. 自由发挥
+
+使用下面的命令初始化数据库：
+~~~
+sudo -u postgres psql <<EOF
+create database earth_test;
+create user earth_admin with password 'admin';
+alter DATABASE "earth_test" owner to earth_admin;
+EOF
+~~~
