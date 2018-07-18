@@ -1,10 +1,9 @@
-package top.dteam.earth.user
+package top.dteam.earth.backend.user
 
 import grails.gorm.transactions.Rollback
 import grails.testing.mixin.integration.Integration
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import spock.lang.Specification
-import top.dteam.earth.backend.user.User
 
 @Integration
 @Rollback
