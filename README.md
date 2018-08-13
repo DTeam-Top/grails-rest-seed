@@ -36,11 +36,11 @@
   1. 修改相应的包名，目前包的根为：top.dteam.earth.backend
   1. 自由发挥
 
-使用下面的命令初始化数据库：
+使用下面的命令初始化数据库和项目用户：
 ~~~
-sudo -u postgres psql <<EOF
-create database earth_test;
-create user earth_admin with password 'admin';
-alter DATABASE "earth_test" owner to earth_admin;
-EOF
+./create_db.sh 数据库名字
 ~~~
+缺省创建规则（若数据库名字为db）：
+- 产品库：db
+- 测试库：db_test
+- 用户名和密码：db_admin/admin
