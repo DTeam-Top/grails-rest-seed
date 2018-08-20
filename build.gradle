@@ -20,6 +20,10 @@ apply plugin:"war"
 apply plugin:"org.grails.grails-web"
 apply plugin:"org.grails.plugins.views-json"
 
+configurations {
+    compile.exclude module: "spring-boot-starter-tomcat"
+}
+
 repositories {
     mavenLocal()
     maven { url "https://repo.grails.org/grails/core" }
