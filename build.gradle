@@ -90,3 +90,11 @@ bootRun {
     String springProfilesActive = 'spring.profiles.active'
     systemProperty springProfilesActive, System.getProperty(springProfilesActive)
 }
+
+gitProperties {
+    // Limit git.properties content
+    keys = ['git.branch', 'git.build.time', 'git.commit.id'
+            , 'git.commit.id.abbrev', 'git.commit.id.describe'
+            , 'git.commit.message.full', 'git.commit.message.short'
+            , 'git.commit.time', 'git.tags']
+}

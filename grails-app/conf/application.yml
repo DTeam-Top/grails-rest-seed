@@ -27,8 +27,14 @@ spring:
 # Spring Actuator Endpoints are Disabled by Default
 endpoints:
     enabled: false
+# enable /info endpoint
+#    info.enabled: true
     jmx:
         enabled: true
+
+# Show full git.properties, not only git.branch, git.commit.id, and git.commit.time
+# See: https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html#production-ready-application-info-git
+management.info.git.mode: full
 
 ---
 grails:
