@@ -1,7 +1,10 @@
 package top.dteam.earth.backend.user
 
+import groovy.transform.EqualsAndHashCode
+
 import java.time.LocalDateTime
 
+@EqualsAndHashCode
 class LoginHistory implements Serializable {
 
     private static final long serialVersionUID = 1
