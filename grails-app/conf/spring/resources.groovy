@@ -1,10 +1,18 @@
-import top.dteam.earth.backend.user.LoginEventListener
-import top.dteam.earth.backend.user.UserPasswordEncoderListener
 import grails.plugin.springsecurity.SpringSecurityService
+import top.dteam.earth.backend.user.LoginEventListener
+import top.dteam.earth.backend.user.LoginResponseJsonRender
+import top.dteam.earth.backend.user.MyUserDetailsService
+import top.dteam.earth.backend.user.UserPasswordEncoderListener
 
-// Place your Spring DSL code here
 beans = {
     userPasswordEncoderListener(UserPasswordEncoderListener)
+    userDetailsService(MyUserDetailsService)
+    accessTokenJsonRenderer(LoginResponseJsonRender) {
+        usernamePropertyName = 'username'
+        tokenPropertyName = 'access_token'
+        authoritiesPropertyName = 'roles'
+        useBearerToken = true
+    }
     springSecurityService(SpringSecurityService) {
         authenticationTrustResolver = ref('authenticationTrustResolver')
         grailsApplication = application
