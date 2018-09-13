@@ -38,5 +38,3 @@ grails.plugin.springsecurity.failureHandler.exceptionMappings = [
 ]
 
 grails.plugin.springsecurity.rest.token.validation.enableAnonymousAccess = true
-
-grails.databinding.dateFormats = ['yyyy-MM-dd HH:mm:ss']
