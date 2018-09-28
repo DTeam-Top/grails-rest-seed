@@ -2,4 +2,4 @@ import groovy.transform.*
 
 @Field Object object
 
-json g.render(object)
+json g.render(object, [deep:true])
