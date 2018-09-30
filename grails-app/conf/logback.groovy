@@ -75,6 +75,7 @@ logger('liquibase', WARN)
 logger('ctory', WARN)
 logger('liquibase-hibernate', WARN)
 logger('org.springframework.security', WARN)
+logger('org.hibernate.orm.deprecation', ERROR)
 
 if (DEBUG_SQL) {
     logger('org.hibernate.SQL', DEBUG, ['R_SQL'])
