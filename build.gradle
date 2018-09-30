@@ -7,7 +7,7 @@ buildscript {
         classpath "org.grails:grails-gradle-plugin:$grailsVersion"
         classpath "org.grails.plugins:hibernate5:${gormVersion - ".RELEASE"}"
         classpath "org.grails.plugins:views-gradle:1.2.8"
-        classpath 'org.grails.plugins:database-migration:3.0.3'
+        classpath 'org.grails.plugins:database-migration:3.0.4'
         classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.5.1"
     }
 }
@@ -60,13 +60,13 @@ dependencies {
     compile "org.hibernate:hibernate-java8:5.2.17.Final"
     compile 'org.grails.plugins:postgresql-extensions:6.0.0'
     compile 'com.google.guava:guava:24.0-jre'
-    compile "org.grails.plugins:database-migration:3.0.3"
+    compile "org.grails.plugins:database-migration:3.0.4"
 
     console "org.grails:grails-console"
     profile "org.grails.profiles:rest-api"
     runtime "org.glassfish.web:el-impl:2.1.2-b03"
 
-    runtime "org.postgresql:postgresql:42.2.4"
+    runtime "org.postgresql:postgresql:42.2.5"
     runtime("com.zaxxer:HikariCP:3.2.0") {
         exclude group: "org.slf4j"
     }
