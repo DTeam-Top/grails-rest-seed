@@ -1,10 +1,10 @@
 package top.dteam.earth.backend.user
 
+import grails.core.GrailsApplication
 import grails.gorm.transactions.Rollback
 import grails.plugins.rest.client.RestBuilder
 import grails.plugins.rest.client.RestResponse
 import grails.testing.mixin.integration.Integration
-import grails.util.Holders
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import spock.lang.Specification
 import top.dteam.earth.backend.utils.TestUtils
@@ -12,6 +12,9 @@ import top.dteam.earth.backend.utils.TestUtils
 @Integration
 @Rollback
 class UserFunctionalSpec extends Specification {
+
+    GrailsApplication grailsApplication
+    UserService userService
 
     void setup() {
         TestUtils.initEnv()
@@ -44,19 +47,83 @@ class UserFunctionalSpec extends Specification {
 
     void "登录之后的响应应该包含用户的Displayname"() {
         when:
-        String loginEndpointUrl = Holders.grailsApplication.config.grails.plugin.springsecurity.rest.login.endpointUrl
+        String loginEndpointUrl = grailsApplication.config.grails.plugin.springsecurity.rest.login.endpointUrl
         String loginUrl = "http://localhost:${serverPort}${loginEndpointUrl}"
         RestBuilder restBuilder = new RestBuilder()
         RestResponse response = restBuilder.post(loginUrl) {
             json {
-                username = 'admin'
-                password = 'admin'
+                username = TestUtils.admin
+                password = TestUtils.admin
             }
         }
 
         then:
         response.status == 200
         response.json.displayName
+    }
+
+    void '冻结用户无法登录'() {
+        setup:
+        RestBuilder restBuilder = new RestBuilder()
+        User user
+        User.withNewTransaction {
+            user = userService.createUserWithRole(
+                    new User(username: '13500000001', password: 'test', displayName: 'user', enabled: false)
+                    , 'ROLE_ADMIN')
+        }
+
+        when:
+        String loginEndpointUrl = grailsApplication.config.grails.plugin.springsecurity.rest.login.endpointUrl
+        RestResponse response = restBuilder.post("http://localhost:${serverPort}${loginEndpointUrl}") {
+            json {
+                username = user.username
+                password = 'test'
+            }
+        }
+
+        then:
+        response.status == 401
+    }
+
+    void '登录成功的用户应该有登录记录'() {
+        when:
+        TestUtils.login(serverPort, TestUtils.admin, TestUtils.admin)
+        String jwt = TestUtils.login(serverPort, TestUtils.admin, TestUtils.admin)
+        try {
+            TestUtils.login(serverPort, TestUtils.admin, 'wrongPassword')
+        } catch (RuntimeException e) {
+            // 登录失败用户不应该记录日志
+        }
+
+        // 登录成功之后正常访问不应该有登录日志
+        new RestBuilder().get("http://localhost:${serverPort}/") {
+            header('Authorization', "Bearer ${jwt}")
+        }
+
+        then:
+        LoginHistory.count() == 2
+    }
+
+    void "登录过的用户应该可以refresh JWT"() {
+        setup:
+        RestBuilder restBuilder = new RestBuilder()
+        RestResponse loginResponse = restBuilder.post("http://localhost:${serverPort}/api/login") {
+            json {
+                username = TestUtils.admin
+                password = TestUtils.admin
+            }
+        }
+        String refreshToken = loginResponse.json.refresh_token
+
+        when:
+        RestResponse response = restBuilder.post("http://localhost:${serverPort}/oauth/access_token") {
+            header('Content-Type', 'application/x-www-form-urlencoded')
+            body "grant_type=refresh_token&refresh_token=${refreshToken}".toString()
+        }
+
+        then:
+        response.status == 200
+        response.json.access_token != null
     }
 
 }

@@ -22,4 +22,12 @@ class Role implements Serializable {
         comment '角色'
         authority comment: '角色名'
     }
+
+    static List<String> validRoles() {
+        [
+                'ROLE_ADMIN'  // 管理员
+                , 'ROLE_YH'   // 用户
+        ]
+    }
+
 }

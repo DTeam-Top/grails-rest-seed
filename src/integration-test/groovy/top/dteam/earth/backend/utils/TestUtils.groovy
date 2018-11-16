@@ -11,9 +11,11 @@ class TestUtils {
     static GrailsApplication grailsApplication = Holders.grailsApplication
     static UserService userService = grailsApplication.mainContext.getBean('userService')
 
+    static String admin = '13500000000'
+
     static void initEnv() {
         initAllRoles()
-        createUser('ROLE_ADMIN', 'admin')
+        createUser('ROLE_ADMIN', admin)
     }
 
     static void clearEnv() {
@@ -43,7 +45,7 @@ class TestUtils {
     }
 
     static void initAllRoles() {
-        ['ROLE_ADMIN'].each {
+        Role.validRoles().each {
             new Role(authority: it).save()
         }
     }
@@ -51,6 +53,12 @@ class TestUtils {
     static User createUser(String role, String name) {
         User user = new User(username: name, password: name, displayName: name)
         userService.createUserWithRole(user, role)
+        user
+    }
+
+    static User createUser(List<String> roles, String name) {
+        User user = new User(username: name, password: name, displayName: name)
+        userService.createUserWithRoles(user, roles)
         user
     }
 
