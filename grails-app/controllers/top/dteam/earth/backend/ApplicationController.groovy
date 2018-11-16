@@ -1,4 +1,4 @@
-package backend
+package top.dteam.earth.backend
 
 import grails.core.GrailsApplication
 import grails.plugins.*

@@ -1,4 +1,4 @@
-package backend
+package top.dteam.earth.backend
 
 import grails.boot.GrailsApp
 import grails.boot.config.GrailsAutoConfiguration

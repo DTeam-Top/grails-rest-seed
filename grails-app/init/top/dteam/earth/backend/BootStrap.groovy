@@ -1,4 +1,4 @@
-package backend
+package top.dteam.earth.backend
 
 import groovy.util.logging.Slf4j
 import org.springframework.boot.info.GitProperties
