@@ -16,6 +16,7 @@ grails rest-api的模板工程，其脱胎于实际的项目经验，集合了�
   - liquibase-core
 - build信息
   - gradle-git-properties
+- 阿里云OSS
 
 ## 基本配置
 - 日志
@@ -39,6 +40,9 @@ grails rest-api的模板工程，其脱胎于实际的项目经验，集合了�
   - 如果希望启用`actuator`，需要在`application.yml`中设置`endpoints.info.enable: true`
 - Json View
   - 缺省采用`deep`策略，但激活它有个前提：相应的关联需要被初始化，即在mapping中采用`fetch: join`。（注意：对单端关联可以采用这一策略，但对于多端，不建议。）
+- 服务端签名后直传阿里云OSS，见[此链接](https://help.aliyun.com/document_detail/31926.html)。
+  - 即后端传给前端授权码，之后由前端直接上传OSS，不经过后端。
+  - 修改application.yml中【aliyun/oss】部分。
 
 ## 使用指南
 

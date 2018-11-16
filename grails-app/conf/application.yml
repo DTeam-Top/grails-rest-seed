@@ -36,6 +36,15 @@ endpoints:
 # See: https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html#production-ready-application-info-git
 management.info.git.mode: full
 
+aliyun:
+    oss:
+        endpoint: ${ALIYUN_OSS_ENDPOINT:oss-cn-hangzhou.aliyuncs.com}
+        accessKeyId: ${ALIYUN_OSS_ACCESS_KEY_ID:mock}
+        accessKeySeret: ${ALIYUN_OSS_ACCESS_KEY_SECRET:mock}
+        bucket: ${ALIYUN_OSS_BUCKET:mock}
+        dir: ${ALIYUN_OSS_DIR:}
+        cdnUrl: ${ALIYUN_OSS_CDNURL:mock}
+
 ---
 grails:
     mime:

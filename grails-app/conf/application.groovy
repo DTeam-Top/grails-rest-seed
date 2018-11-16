@@ -25,8 +25,9 @@ grails.plugin.springsecurity.rest.token.storage.jwt.with {
 grails.plugin.springsecurity.securityConfigType = "InterceptUrlMap"
 
 grails.plugin.springsecurity.interceptUrlMap = [
-        [pattern: '/', access: ['permitAll']],
-        [pattern: '/api/**', access: ['denyAll']]
+        [pattern: '/', access: ['permitAll']]
+        , [pattern: '/api/getUploadAuthority', access: ['isFullyAuthenticated()'], httpMethod: 'GET']
+        , [pattern: '/api/**', access: ['denyAll']]
 ]
 
 grails.plugin.springsecurity.filterChain.chainMap = [

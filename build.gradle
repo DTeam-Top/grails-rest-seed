@@ -61,6 +61,7 @@ dependencies {
     compile 'org.grails.plugins:postgresql-extensions:6.0.0'
     compile 'com.google.guava:guava:24.0-jre'
     compile "org.grails.plugins:database-migration:3.0.4"
+    compile "com.aliyun.oss:aliyun-sdk-oss:3.3.0"
 
     console "org.grails:grails-console"
     profile "org.grails.profiles:rest-api"
