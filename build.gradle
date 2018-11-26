@@ -8,7 +8,7 @@ buildscript {
         classpath "org.grails.plugins:hibernate5:${gormVersion - ".RELEASE"}"
         classpath "org.grails.plugins:views-gradle:1.2.8"
         classpath 'org.grails.plugins:database-migration:3.0.4'
-        classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.5.1"
+        classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.5.2"
     }
 }
 
