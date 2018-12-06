@@ -7,6 +7,7 @@ import grails.plugins.rest.client.RestResponse
 import grails.testing.mixin.integration.Integration
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import spock.lang.Specification
+import top.dteam.earth.backend.operation.SmsLog
 import top.dteam.earth.backend.utils.TestUtils
 
 @Integration
@@ -124,6 +125,127 @@ class UserFunctionalSpec extends Specification {
         then:
         response.status == 200
         response.json.access_token != null
+    }
+
+    void '只有登录用户可以更改密码，更改成功后有短信通知'() {
+        setup:
+        RestBuilder rest = new RestBuilder()
+        User user
+        User.withNewTransaction {
+            user = TestUtils.createUser('ROLE_YH', '13500000001')
+        }
+
+        when: 'not login'
+        RestResponse response = rest.put("http://localhost:${serverPort}/api/changePassword") {
+            json {
+                oldPassword = '13500000001'
+                newPassword = 'password2'
+            }
+        }
+
+        then:
+        response.status == 401
+        SmsLog.count() == 0
+
+        when: 'login'
+        String oldPass = user.password
+        String jwt = TestUtils.login(serverPort, '13500000001', '13500000001')
+        response = rest.put("http://localhost:${serverPort}/api/changePassword") {
+            header('Authorization', "Bearer ${jwt}")
+            json {
+                oldPassword = '13500000001'
+                newPassword = 'password2'
+            }
+        }
+
+        then:
+        response.status == 200
+        user.refresh().password != oldPass
+        SmsLog.countByUsername('13500000001') == 1
+    }
+
+    void '只有登录用户可以看到自己的信息'() {
+        setup:
+        RestBuilder rest = new RestBuilder()
+        User.withNewTransaction {
+            TestUtils.createUser('ROLE_YH', '13500000001')
+        }
+
+        when: 'not login'
+        RestResponse response = rest.get("http://localhost:${serverPort}/api/self")
+
+        then:
+        response.status == 401
+
+        when: 'login'
+        String jwt = TestUtils.login(serverPort, '13500000001', '13500000001')
+        response = rest.get("http://localhost:${serverPort}/api/self") {
+            header('Authorization', "Bearer ${jwt}")
+        }
+
+        then:
+        response.status == 200
+        response.json.username == '13500000001'
+        response.json.displayName == '13500000001'
+    }
+
+    void '只有登录用户可以修改自己的信息'() {
+        setup:
+        RestBuilder rest = new RestBuilder()
+        RestResponse response
+        User user
+        User.withNewTransaction {
+            user = TestUtils.createUser('ROLE_YH', '13500000001')
+        }
+
+        when: 'not login'
+        response = rest.put("http://localhost:${serverPort}/api/updatePersonalInfo") {
+            json {
+                displayName = 'newName'
+            }
+        }
+
+        then:
+        response.status == 401
+
+        when: 'login'
+        String jwt = TestUtils.login(serverPort, '13500000001', '13500000001')
+        response = rest.put("http://localhost:${serverPort}/api/updatePersonalInfo") {
+            header('Authorization', "Bearer ${jwt}")
+            json {
+                displayName = 'newName'
+            }
+        }
+        user.refresh()
+
+        then:
+        response.status == 200
+        user.displayName == 'newName'
+    }
+
+    void "注册页面可发送验证码"() {
+        setup:
+        RestBuilder rest = new RestBuilder()
+
+        when: 'no username'
+        RestResponse response = rest.post("http://localhost:${serverPort}/api/sendSmsCode") {
+            json {
+                username = ''
+            }
+        }
+
+        then:
+        response.status == 400
+
+        when: 'has username'
+        response = rest.post("http://localhost:${serverPort}/api/sendSmsCode") {
+            json {
+                username = '12345678901'
+            }
+        }
+        then:
+        response.status == 200
+        SmsLog.countByUsername('12345678901') == 1
     }
 
 }

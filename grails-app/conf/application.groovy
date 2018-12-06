@@ -26,6 +26,16 @@ grails.plugin.springsecurity.securityConfigType = "InterceptUrlMap"
 
 grails.plugin.springsecurity.interceptUrlMap = [
         [pattern: '/', access: ['permitAll']]
+        , [pattern: '/error', access: ['permitAll']]
+        , [pattern: '/api/sendSmsCode', access: ['permitAll']]
+        , [pattern: '/api/register', access: ['permitAll']]
+        , [pattern: '/api/self', access: ["isFullyAuthenticated()"]]
+        , [pattern: '/api/updatePersonalInfo', access: ["isFullyAuthenticated()"]]
+        , [pattern: '/api/changePassword', access: ["isFullyAuthenticated()"]]
+        , [pattern: '/api/users', access: ['ROLE_ADMIN']]
+        , [pattern: '/api/users/resetPassword', access: ['permitAll'], httpMethod: 'PUT']
+        , [pattern: '/api/users/*', access: ['ROLE_ADMIN']]
+        , [pattern: '/api/smslogs', access: ['ROLE_ADMIN'], httpMethod: 'GET']
         , [pattern: '/api/getUploadAuthority', access: ['isFullyAuthenticated()'], httpMethod: 'GET']
         , [pattern: '/api/**', access: ['denyAll']]
 ]

@@ -1,0 +1,7 @@
+import top.dteam.earth.backend.user.User
+
+model {
+    User user
+}
+
+json tmpl.user(user)

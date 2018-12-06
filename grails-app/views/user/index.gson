@@ -1,0 +1,16 @@
+import grails.orm.PagedResultList
+import top.dteam.earth.backend.user.User
+
+model {
+    List<User> userList = []
+}
+
+json {
+    userList tmpl.user(userList)
+
+    if (userList instanceof PagedResultList) {
+        userCount((userList as PagedResultList).totalCount)
+    } else {
+        userCount(userList.size())
+    }
+}

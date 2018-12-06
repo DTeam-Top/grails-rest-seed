@@ -1,0 +1,9 @@
+import top.dteam.earth.backend.user.User
+
+model {
+    User user
+}
+
+json g.render(user, [resolveTemplate: false, excludes: ['password']]) {
+    role user.getAuthorities().collect { it.authority }
+}
