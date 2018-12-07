@@ -52,13 +52,4 @@ class User implements Serializable {
     }
 
     static transients = ['accountExpired', 'accountLocked']
-
-    Map asMap() {
-        [
-                id           : this.id
-                , displayName: this.displayName
-                , address    : this.address
-                , username   : this.username
-        ]
-    }
 }
