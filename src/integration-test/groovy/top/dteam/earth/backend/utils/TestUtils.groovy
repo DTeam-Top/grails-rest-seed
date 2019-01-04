@@ -4,7 +4,7 @@ import grails.core.GrailsApplication
 import grails.plugins.rest.client.RestBuilder
 import grails.plugins.rest.client.RestResponse
 import grails.util.Holders
-import top.dteam.earth.backend.operation.SmsLog
+import top.dteam.earth.backend.operation.Job
 import top.dteam.earth.backend.user.*
 
 class TestUtils {
@@ -20,7 +20,7 @@ class TestUtils {
     }
 
     static void clearEnv() {
-        SmsLog.executeUpdate('delete from SmsLog')
+        Job.executeUpdate('delete from Job')
         LoginHistory.executeUpdate('delete from LoginHistory')
         UserRole.executeUpdate('delete from UserRole')
         Role.executeUpdate('delete from Role')

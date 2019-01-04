@@ -6,7 +6,7 @@ import org.apache.commons.lang.RandomStringUtils
 import org.grails.datastore.mapping.validation.ValidationException
 import org.grails.web.json.JSONObject
 import org.springframework.security.authentication.encoding.PasswordEncoder
-import top.dteam.earth.backend.operation.SmsLogService
+import top.dteam.earth.backend.operation.JobService
 
 import static org.springframework.http.HttpStatus.*
 
@@ -14,7 +14,7 @@ import static org.springframework.http.HttpStatus.*
 class UserController {
 
     SpringSecurityService springSecurityService
-    SmsLogService smsLogService
+    JobService jobService
     UserService userService
 
     static responseFormats = ['json', 'xml']
@@ -69,7 +69,7 @@ class UserController {
                 user.password = request.JSON.newPassword
                 user.passwordExpired = false
                 userService.save(user)
-                smsLogService.saveNewPassword(user.username)
+                jobService.saveSmsJob(user.username, JobService.SMS_NEWPASSWORD)
             } else {
                 def message = [message: '旧密码不正确']
                 respond message, status: BAD_REQUEST
@@ -90,7 +90,7 @@ class UserController {
         }
 
         String smsCode = RandomStringUtils.randomNumeric(6)
-        smsLogService.saveSmsCode(request.JSON.username, smsCode)
+        jobService.saveSmsJob(request.JSON.username, JobService.SMS_CODE, [code: smsCode])
 
         Map map = [smsCode: smsCode]
         respond map

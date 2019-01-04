@@ -35,7 +35,7 @@ grails.plugin.springsecurity.interceptUrlMap = [
         , [pattern: '/api/users', access: ['ROLE_ADMIN']]
         , [pattern: '/api/users/resetPassword', access: ['permitAll'], httpMethod: 'PUT']
         , [pattern: '/api/users/*', access: ['ROLE_ADMIN']]
-        , [pattern: '/api/smslogs', access: ['ROLE_ADMIN'], httpMethod: 'GET']
+        , [pattern: '/api/jobs', access: ['ROLE_ADMIN'], httpMethod: 'GET']
         , [pattern: '/api/getUploadAuthority', access: ['isFullyAuthenticated()'], httpMethod: 'GET']
         , [pattern: '/api/**', access: ['denyAll']]
 ]

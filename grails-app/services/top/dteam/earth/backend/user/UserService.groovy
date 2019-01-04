@@ -6,12 +6,12 @@ import grails.gorm.transactions.Transactional
 import org.apache.commons.lang.RandomStringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
-import top.dteam.earth.backend.operation.SmsLogService
+import top.dteam.earth.backend.operation.JobService
 
 @Service(User)
 abstract class UserService {
 
-    SmsLogService smsLogService
+    JobService jobService
 
     @Qualifier('localDateTimeValueConverter')
     @Autowired
@@ -99,7 +99,7 @@ abstract class UserService {
     void resetPassword(User user) {
         user.password = RandomStringUtils.randomNumeric(6)
         user.save()
-        smsLogService.saveNewPassword(user.username)
+        jobService.saveSmsJob(user.username, JobService.SMS_PASSWORD_REST, [password: user.password])
     }
 
 }

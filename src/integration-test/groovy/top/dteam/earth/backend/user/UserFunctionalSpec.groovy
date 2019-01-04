@@ -7,7 +7,7 @@ import grails.plugins.rest.client.RestResponse
 import grails.testing.mixin.integration.Integration
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import spock.lang.Specification
-import top.dteam.earth.backend.operation.SmsLog
+import top.dteam.earth.backend.operation.Job
 import top.dteam.earth.backend.utils.TestUtils
 
 @Integration
@@ -145,7 +145,7 @@ class UserFunctionalSpec extends Specification {
 
         then:
         response.status == 401
-        SmsLog.count() == 0
+        Job.count() == 0
 
         when: 'login'
         String oldPass = user.password
@@ -161,7 +161,7 @@ class UserFunctionalSpec extends Specification {
         then:
         response.status == 200
         user.refresh().password != oldPass
-        SmsLog.countByUsername('13500000001') == 1
+        Job.findByTopic('SMS').body.username == '13500000001'
     }
 
     void '只有登录用户可以看到自己的信息'() {
@@ -245,7 +245,7 @@ class UserFunctionalSpec extends Specification {
         }
         then:
         response.status == 200
-        SmsLog.countByUsername('12345678901') == 1
+        Job.findByTopic('SMS').body.username == '12345678901'
     }
 
 }

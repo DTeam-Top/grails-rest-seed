@@ -6,7 +6,7 @@ import grails.plugins.rest.client.RestResponse
 import grails.testing.mixin.integration.Integration
 import spock.lang.Specification
 import spock.lang.Unroll
-import top.dteam.earth.backend.operation.SmsLog
+import top.dteam.earth.backend.operation.Job
 import top.dteam.earth.backend.utils.TestUtils
 
 import java.time.LocalDateTime
@@ -140,7 +140,7 @@ class ManagementFunctionalSpec extends Specification {
         then:
         response.status == 200
         user.password != oldPassword
-        SmsLog.countByUsername(user.username) == 1
+        Job.findByTopic('SMS').body.username == user.username
 
         where:
         role << ['ROLE_YH']
@@ -167,7 +167,7 @@ class ManagementFunctionalSpec extends Specification {
         then:
         response.status == 200
         user.password != oldPassword
-        SmsLog.countByUsername(user.username) == 1
+        Job.findByTopic('SMS').body.username == user.username
     }
 
     void '管理员应该可以按角色筛选用户'() {
