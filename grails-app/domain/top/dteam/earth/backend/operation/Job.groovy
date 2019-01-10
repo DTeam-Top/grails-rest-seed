@@ -45,7 +45,7 @@ class Job {
     }
 
     static List availableStatus() {
-        ['CREATED', 'PROCESSING', 'SUCCESS', 'FAILURE']
+        ['CREATED', 'PROCESSING', 'SUCCEEDED', 'FAILED']
     }
 
     // 如果job需要有回调，则body中需包含callback
@@ -57,8 +57,9 @@ class Job {
                     body.containsKey('params') &&
                     body.params instanceof Map
         } else if (topic == 'CALLBACK') {
-            return body.containsKey('source') &&    // 源job的id
-                    body.containsKey('result') &&   // 源job的结果
+            return body.containsKey('source') &&      // 源job的id
+                    body.containsKey('result') &&     // 源job的结果
+                    body.containsKey('callback') &&   // 回调url
                     body.result instanceof Map
         }
 
