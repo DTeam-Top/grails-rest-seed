@@ -9,40 +9,46 @@ import java.time.LocalDateTime
 class Job {
 
     String topic
+    int priority = 5
     Map body
-    boolean processed = false
+    String status = 'CREATED'
     Map result
-    String callback
-    boolean invoked = false
+    int retry = 0
     LocalDateTime dateCreated
+    LocalDateTime lastUpdated
 
     static constraints = {
         topic nullable: false, blank: false, inList: availableTopics()
+        priority min: 1, max: 10
         body nullable: false, validator: { val, obj -> validateBodyWithTopic(val, obj.topic) }
+        status nullable: false, blank: false, inList: availableStatus()
         result nullable: true
-        callback nullable: true, maxSize: 500
     }
 
+    // TODO：创建联合索引，(priority desc, date_created, status = 'CREATED')
     static mapping = {
         comment '任务队列'
         table 'myjob'
         version false
-        topic comment: '任务主题', index: 'idx_myjob_topic'
+        topic comment: '任务主题'
+        priority comment: '优先级'
         body comment: '任务主体', type: JsonbMapType
-        // TODO: 创建partial index, processed = false
-        processed comment: '是否处理', index: 'idx_myjob_processed'
+        status comment: '任务状态'
         result comment: '任务结果'
-        // TODO: 创建partial index, callback is not null
-        callback comment: '任务结果回调地址'
-        // TODO: 创建partial index, invoked = false
-        invoked comment: '是否处理回调', index: 'idx_myjob_invoked'
-        dateCreated comment: '创建时间', index: 'idx_myjob_date_created'
+        retry comment: '重试次数'
+        dateCreated comment: '创建时间'
+        lastUpdated comment: '最近更新'
     }
 
     static List availableTopics() {
-        ['SMS']
+        ['SMS', 'CALLBACK']
     }
 
+    static List availableStatus() {
+        ['CREATED', 'PROCESSING', 'SUCCESS', 'FAILURE']
+    }
+
+    // 如果job需要有回调，则body中需包含callback
     static boolean validateBodyWithTopic(Map body, String topic) {
         if (topic == 'SMS') {
             return body.containsKey('message') &&
@@ -50,7 +56,12 @@ class Job {
                     body.containsKey('username') &&
                     body.containsKey('params') &&
                     body.params instanceof Map
+        } else if (topic == 'CALLBACK') {
+            return body.containsKey('source') &&    // 源job的id
+                    body.containsKey('result') &&   // 源job的结果
+                    body.result instanceof Map
         }
+
         true
     }
 
