@@ -18,7 +18,7 @@ class Job {
     LocalDateTime lastUpdated
 
     static constraints = {
-        topic nullable: false, blank: false, inList: availableTopics()
+        topic nullable: false, blank: false, maxSize: 10, inList: availableTopics()
         priority min: 1, max: 10
         body nullable: false, validator: { val, obj -> validateBodyWithTopic(val, obj.topic) }
         status nullable: false, blank: false, inList: availableStatus()
