@@ -9,6 +9,7 @@ buildscript {
         classpath "org.grails.plugins:views-gradle:1.2.8"
         classpath 'org.grails.plugins:database-migration:3.0.4'
         classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.5.2"
+        classpath "com.epages:restdocs-api-spec-gradle-plugin:${restDocsApiSpecVersion}"
     }
 }
 
@@ -21,6 +22,7 @@ apply plugin: "war"
 apply plugin: "org.grails.grails-web"
 apply plugin: "org.grails.plugins.views-json"
 apply plugin: "com.gorylenko.gradle-git-properties"
+apply plugin: 'com.epages.restdocs-api-spec'
 
 configurations {
     compile.exclude module: "spring-boot-starter-tomcat"
@@ -29,6 +31,18 @@ configurations {
 repositories {
     mavenLocal()
     maven { url "https://repo.grails.org/grails/core" }
+}
+
+dependencyManagement {
+    dependencies {
+        dependency "org.springframework.restdocs:spring-restdocs-core:$restDocsVersion"
+        dependency "org.springframework.restdocs:spring-restdocs-restassured:$restDocsVersion"
+        dependency "org.springframework.restdocs:spring-restdocs-asciidoctor:$restDocsVersion"
+    }
+    imports {
+        mavenBom "org.grails:grails-bom:$grailsVersion"
+    }
+    applyMavenExclusions false
 }
 
 dependencies {
@@ -75,6 +89,7 @@ dependencies {
     testCompile "org.grails:grails-gorm-testing-support"
     testCompile "org.grails:grails-datastore-rest-client"
     testCompile "org.grails:grails-web-testing-support"
+    testCompile "com.epages:restdocs-api-spec-restassured:${restDocsApiSpecVersion}"
 }
 
 sourceSets {
@@ -98,4 +113,13 @@ gitProperties {
             , 'git.commit.id.abbrev', 'git.commit.id.describe'
             , 'git.commit.message.full', 'git.commit.message.short'
             , 'git.commit.time', 'git.tags']
+}
+
+openapi3 {
+    server = System.getenv('OPENAPI_SERVER') ?: 'http://localhost:8080'
+    title = 'Grails-rest-seed API'
+    description = 'Grails-rest-seed API文档'
+    tagDescriptionsPropertiesFile = 'src/test/resources/tags.yaml'
+    version = '1.0'
+    format = 'yaml'
 }

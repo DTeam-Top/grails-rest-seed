@@ -17,6 +17,8 @@ grails rest-api的模板工程，其脱胎于实际的项目经验，集合了�
 - build信息
   - gradle-git-properties
 - 阿里云OSS
+- 生成OpenAPI 3说明书
+  - 基于[restdocs-api-spec](https://github.com/ePages-de/restdocs-api-spec)项目生成
 
 ## 基本配置
 - 日志
@@ -56,6 +58,35 @@ grails rest-api的模板工程，其脱胎于实际的项目经验，集合了�
   1. git clone
   1. 修改相应的包名，目前包的根为：top.dteam.earth.backend
   1. 自由发挥
+
+### 生成OpenAPI 3说明书
+
+    ./gradlew openapi3
+
+在集成测试成功运行之后会在生成OpenAPI 3说明书: `build/api-spec/openapi3.yaml`。该文件可以在任何支持OpenAPI 3的程序中打开和解析，以及转换其他格式。
+
+如生成`html`可以用`redoc-cli`:
+
+~~~bash
+npm install -g redoc-cli
+redoc-cli bundle build/api-spec/openapi3.yaml
+# 浏览器打开 redoc-static.html
+~~~
+
+其他支持OpenAPI 3的在线编辑器如[Swagger Editor](https://editor.swagger.io/)，[Stoplight](https://stoplight.io/)等，都可以打开这个文件在线编辑并且预览。
+
+更多支持OpenAPI 3的工具可以参考[OpenAPI.Tools](https://openapi.tools/)罗列的列表。
+
+#### 增加Spec-Driven API测试用例
+和原本的功能测试分开，建议单独放在对应的`ApiDocSpec`测试中。完整参考文档参见[restdocs-api-spec文档](https://github.com/ePages-de/restdocs-api-spec)以及[Spring REST Docs文档](https://docs.spring.io/spring-restdocs/docs/2.0.3.RELEASE/reference/html5/)。
+
+目前restdocs-api-spec有以下几个限制，其中一些官方已经在改进中:
+- 暂不支持response描述。issue: https://github.com/ePages-de/restdocs-api-spec/issues/83
+- 暂不支持自定义要引用的schema的名字。issue: https://github.com/ePages-de/restdocs-api-spec/issues/78
+- 暂不支持显示responseBody/requestBody中的fields的required属性。issue: https://github.com/ePages-de/restdocs-api-spec/issues/90
+- requestBody/responseBody example都是字符串。issue: https://github.com/ePages-de/restdocs-api-spec/issues/90
+
+此外，还有很多地方没有开放对应的描述信息修改的接口。完整的OpenAPI 3 Specification参见[官方文档](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md)以及[swagger的教程用例](https://swagger.io/docs/specification/about/)。
 
 ### 异步任务队列
 
