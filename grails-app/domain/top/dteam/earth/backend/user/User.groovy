@@ -2,7 +2,6 @@ package top.dteam.earth.backend.user
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
-import net.kaleidos.hibernate.usertype.JsonbMapType
 
 import java.time.LocalDateTime
 
@@ -21,21 +20,23 @@ class User implements Serializable {
     boolean accountLocked = false
     LocalDateTime dateCreated
 
+    static transients = ['accountExpired', 'accountLocked']
+
     Set<Role> getAuthorities() {
         (UserRole.findAllByUser(this) as List<UserRole>)*.role as Set<Role>
     }
 
     boolean hasRole(String role) {
-        authorities.collect { it.authority }.contains(role)
+        authorities*.authority.contains(role)
     }
 
     boolean hasAnyRole(List<String> role) {
-        !authorities.collect { it.authority }.intersect(role as Set<String>).empty
+        !authorities*.authority.intersect(role as Set<String>).empty
     }
 
     static constraints = {
         username nullable: false, blank: false, maxSize: 11, unique: true
-        password nullable: false, blank: false, password: true
+        password nullable: false, blank: false, password: true, maxSize: 64
         displayName nullable: false, blank: false, maxSize: 30, unique: true
     }
 
@@ -51,5 +52,4 @@ class User implements Serializable {
         dateCreated comment: '创建时间', index: 'idx_date_created'
     }
 
-    static transients = ['accountExpired', 'accountLocked']
 }

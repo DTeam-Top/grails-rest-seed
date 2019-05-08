@@ -21,7 +21,7 @@ class Job {
         topic nullable: false, blank: false, maxSize: 10, inList: availableTopics()
         priority min: 1, max: 10
         body nullable: false, validator: { val, obj -> validateBodyWithTopic(val, obj.topic) }
-        status nullable: false, blank: false, inList: availableStatus()
+        status nullable: false, blank: false, maxSize: 10, inList: availableStatus()
         result nullable: true
     }
 

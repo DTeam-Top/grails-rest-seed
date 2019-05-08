@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<ruleset name="Custom Rules"
+    xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+
+    <description>
+        My custom rules
+    </description>
+
+    <!-- Your rules will come here -->
+    <rule ref="category/java/bestpractices.xml" />
+    <rule ref="category/java/design.xml" >
+        <exclude name="LoosePackageCoupling" />
+        <exclude name="LawOfDemeter" />
+        <exclude name="UseUtilityClass" />
+        <exclude name="UseObjectForClearerAPI" />
+    </rule>
+    <rule ref="category/java/errorprone.xml" >
+        <exclude name="LoggerIsNotStaticFinal" />
+        <!-- DataflowAnomalyAnalysis 检测在For循环中有问题，等待后续版本修复:
+        https://github.com/pmd/pmd/issues/387 -->
+        <exclude name="DataflowAnomalyAnalysis" />
+    </rule>
+    <rule ref="category/java/multithreading.xml" />
+    <rule ref="category/java/performance.xml" >
+        <exclude name="AvoidInstantiatingObjectsInLoops" />
+    </rule>
+    <rule ref="category/java/security.xml" />
+</ruleset>

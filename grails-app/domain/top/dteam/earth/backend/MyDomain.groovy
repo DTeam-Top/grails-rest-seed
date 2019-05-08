@@ -15,4 +15,5 @@ class MyDomain {
         kvPair comment: 'Jsonb示例', type: JsonbMapType
         strings comment: '数组示例', type: ArrayType, params: [type: String]
     }
+
 }

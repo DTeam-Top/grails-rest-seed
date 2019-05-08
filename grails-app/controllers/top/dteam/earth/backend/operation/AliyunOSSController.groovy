@@ -12,4 +12,5 @@ class AliyunOSSController {
         User user = springSecurityService.currentUser as User
         respond AliyunOSSUtil.getUploadAuthority(user.username)
     }
+
 }

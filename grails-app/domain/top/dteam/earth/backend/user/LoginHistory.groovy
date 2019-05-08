@@ -23,4 +23,5 @@ class LoginHistory implements Serializable {
         dateCreated comment: '登录时间'
         id composite: ['user', 'dateCreated']
     }
+
 }

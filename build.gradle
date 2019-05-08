@@ -10,6 +10,8 @@ buildscript {
         classpath 'org.grails.plugins:database-migration:3.0.4'
         classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.5.2"
         classpath "com.epages:restdocs-api-spec-gradle-plugin:${restDocsApiSpecVersion}"
+        // 支持gradle 4.10最高的插件版本为1.6.9，高于这个版本的只支持gradle 5.0+
+        classpath "gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:1.6.9"
     }
 }
 
@@ -23,6 +25,9 @@ apply plugin: "org.grails.grails-web"
 apply plugin: "org.grails.plugins.views-json"
 apply plugin: "com.gorylenko.gradle-git-properties"
 apply plugin: 'com.epages.restdocs-api-spec'
+apply plugin: 'codenarc'
+apply plugin: 'pmd'
+apply plugin: "com.github.spotbugs"
 
 configurations {
     compile.exclude module: "spring-boot-starter-tomcat"
@@ -90,6 +95,8 @@ dependencies {
     testCompile "org.grails:grails-datastore-rest-client"
     testCompile "org.grails:grails-web-testing-support"
     testCompile "com.epages:restdocs-api-spec-restassured:${restDocsApiSpecVersion}"
+
+    spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.9.0'
 }
 
 sourceSets {
@@ -122,4 +129,36 @@ openapi3 {
     tagDescriptionsPropertiesFile = 'src/test/resources/tags.yaml'
     version = '1.0'
     format = 'yaml'
+}
+
+codenarc {
+    toolVersion = '1.3'
+    configFile = file('config/codenarc/rules.groovy')
+}
+
+codenarcMain {
+    excludes = ['**/UrlMappings.groovy']
+}
+
+pmd {
+    toolVersion = '6.14.0'
+    ruleSetFiles = files('config/pmd/rules.xml')
+    ruleSets = []
+}
+
+spotbugs {
+    toolVersion = '3.1.12'
+    effort = "max"
+    excludeFilter = file('config/spotbugs/spotbugs-exclude.xml')
+}
+
+tasks.withType(com.github.spotbugs.SpotBugsTask) {
+    reports {
+        html {
+            enabled = true
+        }
+        xml {
+            enabled = false
+        }
+    }
 }

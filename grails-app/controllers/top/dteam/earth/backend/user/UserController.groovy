@@ -31,7 +31,7 @@ class UserController {
         try {
             userService.register(user)
         } catch (ValidationException e) {
-            log.warn("用户 {} 注册失败: {}", user.username, e.message)
+            log.warn('用户 {} 注册失败: {}', user.username, e.message)
             respond user.errors
             return
         }
@@ -65,13 +65,14 @@ class UserController {
         try {
             if (request.JSON.oldPassword &&
                     request.JSON.newPassword &&
-                    (springSecurityService.passwordEncoder as PasswordEncoder).isPasswordValid(user.password, request.JSON.oldPassword, null)) {
+                    (springSecurityService.passwordEncoder as PasswordEncoder).isPasswordValid(
+                            user.password, request.JSON.oldPassword, null)) {
                 user.password = request.JSON.newPassword
                 user.passwordExpired = false
                 userService.save(user)
                 jobService.saveSmsJob(user.username, JobService.SMS_NEWPASSWORD)
             } else {
-                def message = [message: '旧密码不正确']
+                Map message = [message: '旧密码不正确']
                 respond message, status: BAD_REQUEST
                 return
             }
@@ -97,4 +98,3 @@ class UserController {
     }
 
 }
-

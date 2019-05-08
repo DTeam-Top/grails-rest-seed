@@ -25,4 +25,5 @@ class MyUserDetails extends GrailsUser {
                 , accountNonLocked, authorities, id)
         this.displayName = displayName
     }
+
 }

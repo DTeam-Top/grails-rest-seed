@@ -15,19 +15,21 @@ class MyUserDetailsService implements GrailsUserDetailsService {
 
     static final List NO_ROLES = [new SimpleGrantedAuthority(SpringSecurityUtils.NO_ROLE)]
 
+    @Override
     UserDetails loadUserByUsername(String username, boolean loadRoles)
             throws UsernameNotFoundException {
-        return loadUserByUsername(username)
+        loadUserByUsername(username)
     }
 
     @Transactional(readOnly = true, noRollbackFor = [IllegalArgumentException, UsernameNotFoundException])
     UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
         User user = User.findByUsername(username)
-        if (!user) throw new NoStackUsernameNotFoundException()
+        if (!user) {
+            throw new NoStackUsernameNotFoundException()
+        }
 
         Set<Role> roles = user.authorities
-        List authorities = roles.collect {
+        List authorities = roles?.collect {
             new SimpleGrantedAuthority(it.authority)
         } as List
 
@@ -41,4 +43,5 @@ class MyUserDetailsService implements GrailsUserDetailsService {
                 , user.id
                 , user.displayName)
     }
+
 }
