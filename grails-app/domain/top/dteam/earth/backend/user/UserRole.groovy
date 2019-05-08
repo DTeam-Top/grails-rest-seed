@@ -14,23 +14,10 @@ class UserRole implements Serializable {
     User user
     Role role
 
-    @Override
-    boolean equals(other) {
-        if (other instanceof UserRole) {
-            other.userId == user?.id && other.roleId == role?.id
-        }
-    }
-
-    @Override
-    int hashCode() {
-        int hashCode = HashCodeHelper.initHash()
-        if (user) {
-            hashCode = HashCodeHelper.updateHash(hashCode, user.id)
-        }
-        if (role) {
-            hashCode = HashCodeHelper.updateHash(hashCode, role.id)
-        }
-        hashCode
+    static mapping = {
+        comment '用户角色'
+        id composite: ['user', 'role']
+        version false
     }
 
     static UserRole get(long userId, long roleId) {
@@ -41,15 +28,8 @@ class UserRole implements Serializable {
         criteriaFor(userId, roleId).count()
     }
 
-    private static DetachedCriteria criteriaFor(long userId, long roleId) {
-        UserRole.where {
-            user == User.load(userId) &&
-                    role == Role.load(roleId)
-        }
-    }
-
     static UserRole create(User user, Role role, boolean flush = false) {
-        def instance = new UserRole(user: user, role: role)
+        UserRole instance = new UserRole(user: user, role: role)
         instance.save(flush: flush)
         instance
     }
@@ -79,9 +59,30 @@ class UserRole implements Serializable {
         }
     }
 
-    static mapping = {
-        comment '用户角色'
-        id composite: ['user', 'role']
-        version false
+    @Override
+    boolean equals(Object other) {
+        if (other instanceof UserRole) {
+            other.userId == user?.id && other.roleId == role?.id
+        }
     }
+
+    @Override
+    int hashCode() {
+        int hashCode = HashCodeHelper.initHash()
+        if (user) {
+            hashCode = HashCodeHelper.updateHash(hashCode, user.id)
+        }
+        if (role) {
+            hashCode = HashCodeHelper.updateHash(hashCode, role.id)
+        }
+        hashCode
+    }
+
+    private static DetachedCriteria criteriaFor(long userId, long roleId) {
+        UserRole.where {
+            user == User.load(userId) &&
+                    role == Role.load(roleId)
+        }
+    }
+
 }

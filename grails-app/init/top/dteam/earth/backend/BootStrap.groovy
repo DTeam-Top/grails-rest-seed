@@ -13,7 +13,7 @@ class BootStrap {
     UserService userService
 
     def init = { servletContext ->
-        log.info("Application running at commit: {}, branch: {}, commit time: {}, build time: {}"
+        log.info('Application running at commit: {}, branch: {}, commit time: {}, build time: {}'
                 , gitProperties.shortCommitId
                 , gitProperties.branch
                 , gitProperties.commitTime
@@ -28,7 +28,6 @@ class BootStrap {
                 userService.createUserWithRole(user, 'ROLE_ADMIN')
             }
         }
-
     }
 
     def destroy = {

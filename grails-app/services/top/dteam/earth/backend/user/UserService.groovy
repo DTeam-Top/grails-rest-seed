@@ -46,13 +46,13 @@ abstract class UserService {
             }
 
             if (args.role) {
-                sqlRestriction """
+                sqlRestriction '''
                     EXISTS ( SELECT 1 FROM user_role
                         JOIN role ON user_role.role_id = role.id
                         WHERE user_role.user_id = {alias}.id AND
                             role.authority = ?
                     )
-                """, [args.role]
+                ''', [args.role]
             }
         }
     }

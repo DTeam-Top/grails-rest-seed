@@ -14,7 +14,7 @@ class ManagementController {
     SpringSecurityService springSecurityService
 
     static responseFormats = ['json', 'xml']
-    static allowedMethods = [save: "POST", update: "PUT", resetPassword: "PUT"]
+    static allowedMethods = [save: 'POST', update: 'PUT', resetPassword: 'PUT']
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -37,7 +37,7 @@ class ManagementController {
         User currentLoginUser = springSecurityService.currentUser as User
 
         if (currentLoginUser.hasRole('ROLE_KF') && role == 'ROLE_ADMIN') {
-            def message = [message: '客服不能创建管理员']
+            Map message = [message: '客服不能创建管理员']
             respond message, status: FORBIDDEN
             return
         }
@@ -64,7 +64,7 @@ class ManagementController {
 
         User currentLoginUser = springSecurityService.currentUser as User
         if (currentLoginUser.hasRole('ROLE_KF') && user.hasRole('ROLE_ADMIN')) {
-            def message = [message: '客服修改创建管理员']
+            Map message = [message: '客服修改创建管理员']
             respond message, status: FORBIDDEN
             return
         }

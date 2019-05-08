@@ -7,7 +7,10 @@ import com.aliyun.oss.model.PolicyConditions
 import grails.config.Config
 import grails.util.Holders
 
+import java.time.Instant
+
 class AliyunOSSUtil {
+
     private static final Config CONFIG = Holders.grailsApplication.config
     private static final String ENDPOINT = CONFIG.aliyun?.oss?.endpoint ?: 'oss.aliyuncs.com'
     private static final String ACCESS_KEY_ID = CONFIG.aliyun?.oss?.accessKeyId ?: ''
@@ -16,7 +19,7 @@ class AliyunOSSUtil {
     private static final String DIR = CONFIG.aliyun?.oss?.dir ?: ''
     private static final String HOST = "https://${BUCKET}.${ENDPOINT}"
     private static final String CDNURL = CONFIG.aliyun?.oss?.cdnUrl
-    private static final OSSClient client = new OSSClient(ENDPOINT, ACCESS_KEY_ID, ACCESS_KEY_SECRET)
+    private static final OSSClient CLIENT = new OSSClient(ENDPOINT, ACCESS_KEY_ID, ACCESS_KEY_SECRET)
 
     static Map getUploadAuthority(String subDir = '') {
         List<String> dirList = [DIR, subDir]
@@ -24,18 +27,18 @@ class AliyunOSSUtil {
         String accessDir = dirList.join('/')
         long expireTime = 300
         long expireEndTime = System.currentTimeMillis() + expireTime * 1000
-        Date expiration = new Date(expireEndTime)
+        Instant expiration = Instant.ofEpochMilli(expireEndTime)
         PolicyConditions policyConds = new PolicyConditions()
         policyConds.addConditionItem(PolicyConditions.COND_CONTENT_LENGTH_RANGE, 0, 1048576000)
         policyConds.addConditionItem(MatchMode.StartWith, PolicyConditions.COND_KEY, accessDir)
 
-        String postPolicy = client.generatePostPolicy(expiration, policyConds)
-        byte[] binaryData = postPolicy.getBytes("utf-8")
+        String postPolicy = CLIENT.generatePostPolicy(Date.from(expiration), policyConds)
+        byte[] binaryData = postPolicy.getBytes('utf-8')
         String encodedPolicy = BinaryUtil.toBase64String(binaryData)
-        String postSignature = client.calculatePostSignature(postPolicy)
+        String postSignature = CLIENT.calculatePostSignature(postPolicy)
 
         [accessKeyId: ACCESS_KEY_ID, policy: encodedPolicy, signature: postSignature
          , dir      : accessDir, host: HOST, expire: expireEndTime, cdnUrl: CDNURL]
     }
-}
 
+}

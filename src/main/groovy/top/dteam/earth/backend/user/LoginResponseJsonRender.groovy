@@ -7,7 +7,6 @@ import grails.plugin.springsecurity.rest.token.rendering.AccessTokenJsonRenderer
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import org.pac4j.core.profile.CommonProfile
-import org.springframework.security.core.GrantedAuthority
 import org.springframework.util.Assert
 
 @Slf4j
@@ -22,14 +21,12 @@ class LoginResponseJsonRender implements AccessTokenJsonRenderer {
 
     @Override
     String generateJson(AccessToken accessToken) {
-        Assert.isInstanceOf(MyUserDetails, accessToken.principal, "A MyUserDetails implementation is required")
+        Assert.isInstanceOf(MyUserDetails, accessToken.principal, 'A MyUserDetails implementation is required')
         MyUserDetails userDetails = accessToken.principal as MyUserDetails
 
         Map<String, Object> result = [
                 (usernamePropertyName)   : userDetails.username,
-                (authoritiesPropertyName): accessToken.authorities.collect { GrantedAuthority role ->
-                    role.authority
-                },
+                (authoritiesPropertyName): accessToken.authorities*.authority,
                 userId                   : userDetails.id,
                 displayName              : userDetails.displayName
         ]
@@ -42,23 +39,18 @@ class LoginResponseJsonRender implements AccessTokenJsonRenderer {
                 result.expires_in = accessToken.expiration
             }
 
-            if (accessToken.refreshToken) result.refresh_token = accessToken.refreshToken
-
+            if (accessToken.refreshToken) {
+                result.refresh_token = accessToken.refreshToken
+            }
         } else {
             result[tokenPropertyName] = accessToken.accessToken
         }
 
-        if (userDetails instanceof OauthUser) {
-            CommonProfile profile = (userDetails as OauthUser).userProfile
-            result.with {
-                displayName = profile.displayName
-            }
-        }
-
-        def jsonResult = result as JSON
+        JSON jsonResult = result as JSON
 
         log.debug "Generated JSON: ${jsonResult.toString()}"
 
-        return jsonResult.toString()
+        jsonResult.toString()
     }
+
 }
