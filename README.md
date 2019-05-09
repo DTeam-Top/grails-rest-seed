@@ -118,5 +118,5 @@ CALLBACK主题任务由clock负责创建，并且优先级最高。
 本地开发使用了`codenarc`, `pmd`, `spotbugs`进行代码验证，在提交代码前需要确保测试和代码质量检测均通过:
 
 ```
-./gradlew test integratinoTest codenarcMain pmdMain spotbugsMain
+./gradlew test integrationTest codenarcMain pmdMain spotbugsMain
 ```

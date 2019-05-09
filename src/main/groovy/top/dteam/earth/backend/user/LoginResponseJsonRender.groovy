@@ -1,12 +1,10 @@
 package top.dteam.earth.backend.user
 
 import grails.converters.JSON
-import grails.plugin.springsecurity.rest.oauth.OauthUser
 import grails.plugin.springsecurity.rest.token.AccessToken
 import grails.plugin.springsecurity.rest.token.rendering.AccessTokenJsonRenderer
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
-import org.pac4j.core.profile.CommonProfile
 import org.springframework.util.Assert
 
 @Slf4j
