@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/DTeam-Top/grails-rest-seed.svg?branch=master)](https://travis-ci.com/DTeam-Top/grails-rest-seed)
+
 # Grails Rest Seed
 
 grails rest-api的模板工程，其脱胎于实际的项目经验，集合了我们Grails项目的初始工具包和插件：

@@ -10,4 +10,5 @@ images/
 .*
 !.gitignore
 !.gitlab-ci.yml
+!.travis.yml
 bin/
