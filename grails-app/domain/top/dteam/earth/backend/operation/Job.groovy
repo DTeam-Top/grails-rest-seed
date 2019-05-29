@@ -3,7 +3,7 @@ package top.dteam.earth.backend.operation
 import grails.rest.Resource
 import net.kaleidos.hibernate.usertype.JsonbMapType
 
-import java.time.LocalDateTime
+import java.time.OffsetDateTime
 
 @Resource(uri = '/api/jobs', readOnly = true)
 class Job {
@@ -14,8 +14,8 @@ class Job {
     String status = 'CREATED'
     Map result
     int retry = 0
-    LocalDateTime dateCreated
-    LocalDateTime lastUpdated
+    OffsetDateTime dateCreated
+    OffsetDateTime lastUpdated
 
     static constraints = {
         topic nullable: false, blank: false, maxSize: 10, inList: availableTopics()
@@ -36,8 +36,8 @@ class Job {
         status comment: '任务状态'
         result comment: '任务结果'
         retry comment: '重试次数'
-        dateCreated comment: '创建时间'
-        lastUpdated comment: '最近更新'
+        dateCreated comment: '创建时间', sqlType: 'timestamptz'
+        lastUpdated comment: '最近更新', sqlType: 'timestamptz'
     }
 
     static List availableTopics() {

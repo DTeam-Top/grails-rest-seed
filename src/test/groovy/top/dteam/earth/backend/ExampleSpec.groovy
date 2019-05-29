@@ -2,16 +2,16 @@ package top.dteam.earth.backend
 
 import grails.test.hibernate.HibernateSpec
 
-class MyDomainSpec extends HibernateSpec {
+class ExampleSpec extends HibernateSpec {
 
-    List<Class> getDomainClasses() { [MyDomain] }
+    List<Class> getDomainClasses() { [Example] }
 
     void "test something"() {
         setup:
-        new MyDomain(kvPair: [key: 'value'], strings: ['1', '2'].toArray()).save(flush: true)
+        new Example(kvPair: [key: 'value'], strings: ['1', '2'].toArray()).save(flush: true)
 
         when:
-        MyDomain myDomain = MyDomain.list()[0]
+        Example myDomain = Example.list()[0]
 
         then:
         myDomain.dateCreated

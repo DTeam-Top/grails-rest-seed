@@ -21,11 +21,16 @@ class BootStrap {
 
         environments {
             development {
-                Role.validRoles().each {
-                    new Role(authority: it).save()
+                if (Role.count() == 0) {
+                    Role.validRoles().each {
+                        new Role(authority: it).save()
+                    }
                 }
-                User user = new User(username: '11111111111', password: 'admin', displayName: 'admin')
-                userService.createUserWithRole(user, 'ROLE_ADMIN')
+
+                if (User.count() == 0) {
+                    User user = new User(username: '11111111111', password: 'admin', displayName: 'admin')
+                    userService.createUserWithRole(user, 'ROLE_ADMIN')
+                }
             }
         }
     }

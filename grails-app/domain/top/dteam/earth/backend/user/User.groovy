@@ -3,7 +3,7 @@ package top.dteam.earth.backend.user
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 
-import java.time.LocalDateTime
+import java.time.OffsetDateTime
 
 @EqualsAndHashCode(includes = 'username')
 @ToString(includes = 'username', includeNames = true, includePackage = false)
@@ -18,7 +18,7 @@ class User implements Serializable {
     boolean passwordExpired = false
     boolean accountExpired = false
     boolean accountLocked = false
-    LocalDateTime dateCreated
+    OffsetDateTime dateCreated
 
     static transients = ['accountExpired', 'accountLocked']
 
@@ -49,7 +49,7 @@ class User implements Serializable {
         displayName comment: '昵称'
         enabled comment: '是否有效'
         passwordExpired comment: '密码过期'
-        dateCreated comment: '创建时间', index: 'idx_date_created'
+        dateCreated comment: '创建时间', sqlType: 'timestamptz', index: 'idx_date_created'
     }
 
 }
