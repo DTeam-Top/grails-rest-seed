@@ -1,11 +1,10 @@
 package top.dteam.earth.backend.user
 
-import grails.databinding.converters.ValueConverter
 import grails.gorm.services.Service
 import grails.gorm.transactions.Transactional
 import org.apache.commons.lang.RandomStringUtils
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Qualifier
+import top.dteam.earth.backend.converter.DateTimeValueConverter
 import top.dteam.earth.backend.operation.JobService
 
 @Service(User)
@@ -13,9 +12,8 @@ abstract class UserService {
 
     JobService jobService
 
-    @Qualifier('localDateTimeValueConverter')
     @Autowired
-    ValueConverter localDateTimeValueConverter
+    DateTimeValueConverter dateTimeValueConverter
 
     abstract User get(Serializable id)
 
@@ -28,7 +26,7 @@ abstract class UserService {
     @Transactional(readOnly = true)
     List<User> list(Map args = [:]) {
         User.createCriteria().list(args) {
-            if (args.enabled) {
+            if (args.containsKey('enabled')) {
                 eq('enabled', Boolean.valueOf(args.enabled))
             }
 
@@ -38,11 +36,11 @@ abstract class UserService {
             }
 
             if (args.dateCreatedStart) {
-                gte('dateCreated', localDateTimeValueConverter.convert(args.dateCreatedStart.toString()))
+                gte('dateCreated', dateTimeValueConverter.convert(args.dateCreatedStart))
             }
 
             if (args.dateCreatedEnd) {
-                lte('dateCreated', localDateTimeValueConverter.convert(args.dateCreatedEnd.toString()))
+                lte('dateCreated', dateTimeValueConverter.convert(args.dateCreatedEnd))
             }
 
             if (args.role) {
@@ -59,20 +57,20 @@ abstract class UserService {
 
     @Transactional
     void register(User user) {
-        user.save()
+        save(user)
         new UserRole(user: user, role: Role.findByAuthority('ROLE_YH')).save()
     }
 
     @Transactional
     User createUserWithRole(User user, String role) {
-        user.save()
+        save(user)
         new UserRole(user: user, role: Role.findByAuthority(role)).save()
         user
     }
 
     @Transactional
     User createUserWithRoles(User user, List<String> roles) {
-        user.save()
+        save(user)
         roles.each { role ->
             new UserRole(user: user, role: Role.findByAuthority(role)).save()
         }
@@ -83,7 +81,7 @@ abstract class UserService {
     void freeze(User user) {
         if (user.enabled) {
             user.enabled = false
-            user.save()
+            save(user)
         }
     }
 
@@ -91,14 +89,14 @@ abstract class UserService {
     void unfreeze(User user) {
         if (!user.enabled) {
             user.enabled = true
-            user.save()
+            save(user)
         }
     }
 
     @Transactional
     void resetPassword(User user) {
         user.password = RandomStringUtils.randomNumeric(6)
-        user.save()
+        save(user)
         jobService.saveSmsJob(user.username, JobService.SMS_PASSWORD_REST, [password: user.password])
     }
 

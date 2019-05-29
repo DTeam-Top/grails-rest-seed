@@ -18,8 +18,8 @@ grails.plugin.springsecurity.rest.token.storage.jwt.with {
     secret = System.getenv('JWT_SECRET') ?: 'qrD6h8K6S9503Q06Y6Rfk21TErImPYqa'
     expiration = System.getenv('JWT_EXPIRATION') ?: 3600
     useEncryptedJwt = System.getenv('USE_ENCRYPTED_JWT') ?: false
-    privateKeyPath = System.getenv('PRIVATE_KEY_PATH') ?: ''
-    publicKeyPath = System.getenv('PUBLIC_KEY_PATH') ?: ''
+    privateKeyPath = System.getenv('PRIVATE_KEY_PATH')
+    publicKeyPath = System.getenv('PUBLIC_KEY_PATH')
 }
 
 grails.plugin.springsecurity.securityConfigType = "InterceptUrlMap"

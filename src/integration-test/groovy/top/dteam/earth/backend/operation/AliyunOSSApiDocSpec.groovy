@@ -3,14 +3,10 @@ package top.dteam.earth.backend.operation
 import com.epages.restdocs.apispec.ResourceSnippetParameters
 import grails.gorm.transactions.Rollback
 import grails.testing.mixin.integration.Integration
-import io.restassured.builder.RequestSpecBuilder
 import io.restassured.http.ContentType
-import io.restassured.specification.RequestSpecification
-import org.junit.Rule
-import org.springframework.restdocs.JUnitRestDocumentation
 import org.springframework.restdocs.payload.FieldDescriptor
-import spock.lang.Specification
 import top.dteam.earth.backend.user.User
+import top.dteam.earth.backend.utils.BaseApiDocSpec
 import top.dteam.earth.backend.utils.TestUtils
 
 import static com.epages.restdocs.apispec.ResourceDocumentation.headerWithName
@@ -18,19 +14,11 @@ import static com.epages.restdocs.apispec.ResourceDocumentation.resource
 import static com.epages.restdocs.apispec.RestAssuredRestDocumentationWrapper.document
 import static io.restassured.RestAssured.given
 import static org.springframework.http.HttpHeaders.AUTHORIZATION
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
-import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.documentationConfiguration
 
-// TODO: 写一个BaseApiDocSpec模板类或trait，自动初始化REST Assured
 @Integration
 @Rollback
-class AliyunOSSApiDocSpec extends Specification {
-
-    @Rule
-    JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation()
-
-    private RequestSpecification documentationSpec
+class AliyunOSSApiDocSpec extends BaseApiDocSpec {
 
     FieldDescriptor[] response = [
             fieldWithPath("accessKeyId").description("OSS的access key id")
@@ -43,11 +31,6 @@ class AliyunOSSApiDocSpec extends Specification {
     ]
 
     void setup() {
-        this.documentationSpec = new RequestSpecBuilder()
-                .addFilter(documentationConfiguration(restDocumentation)
-                        .operationPreprocessors().withResponseDefaults(prettyPrint()))
-                .setPort(serverPort)
-                .build()
         TestUtils.initEnv()
     }
 
@@ -76,4 +59,5 @@ class AliyunOSSApiDocSpec extends Specification {
                 .when().get("/api/getUploadAuthority")
                 .then().assertThat().statusCode(200)
     }
+
 }

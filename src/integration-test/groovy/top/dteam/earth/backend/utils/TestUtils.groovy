@@ -55,13 +55,11 @@ class TestUtils {
     static User createUser(String role, String name) {
         User user = new User(username: name, password: name, displayName: name)
         userService.createUserWithRole(user, role)
-        user
     }
 
     static User createUser(List<String> roles, String name) {
         User user = new User(username: name, password: name, displayName: name)
         userService.createUserWithRoles(user, roles)
-        user
     }
 
 }

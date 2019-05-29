@@ -1,4 +1,5 @@
 import grails.plugin.springsecurity.SpringSecurityService
+import top.dteam.earth.backend.converter.DateTimeValueConverter
 import top.dteam.earth.backend.user.LoginEventListener
 import top.dteam.earth.backend.user.LoginResponseJsonRender
 import top.dteam.earth.backend.user.MyUserDetailsService
@@ -20,4 +21,5 @@ beans = {
         passwordEncoder = ref('passwordEncoder')
     }
     loginEventListener(LoginEventListener)
+    dateTimeValueConverter(DateTimeValueConverter)
 }

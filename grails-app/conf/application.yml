@@ -116,17 +116,17 @@ grails.plugin.databasemigration:
 environments:
     test:
         dataSource:
-            dbCreate: create-drop
             url: jdbc:postgresql://127.0.0.1:5432/earth_test?useUnicode=true&characterEncoding=utf8
             username: earth_admin
             password: admin
+            dbCreate: create-drop
         grails.plugin.databasemigration.updateOnStart: false
     development:
         dataSource:
             url: jdbc:postgresql://127.0.0.1:5432/earth?useUnicode=true&characterEncoding=utf8
             username: earth_admin
             password: admin
-            dbCreate: create-drop
+            dbCreate: update
         grails.plugin.databasemigration.updateOnStart: false
     production:
         dataSource:
