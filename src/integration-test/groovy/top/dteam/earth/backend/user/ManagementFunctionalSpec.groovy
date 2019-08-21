@@ -4,6 +4,7 @@ import grails.gorm.transactions.Rollback
 import grails.plugins.rest.client.RestBuilder
 import grails.plugins.rest.client.RestResponse
 import grails.testing.mixin.integration.Integration
+import org.grails.datastore.gorm.events.AutoTimestampEventListener
 import spock.lang.Specification
 import spock.lang.Unroll
 import top.dteam.earth.backend.operation.Job
@@ -14,6 +15,8 @@ import java.time.OffsetDateTime
 @Integration
 @Rollback
 class ManagementFunctionalSpec extends Specification {
+
+    AutoTimestampEventListener autoTimestampEventListener
 
     void setup() {
         TestUtils.initEnv()
@@ -204,19 +207,21 @@ class ManagementFunctionalSpec extends Specification {
         RestBuilder rest = new RestBuilder()
         RestResponse responseAdmin
         User.withNewTransaction {
-            User admin = User.findByUsername('13500000000')
-            admin.dateCreated = OffsetDateTime.parse('1970-01-01T00:00:00Z')
-            admin.save()
-            User u1 = TestUtils.createUser('ROLE_YH', '13500000002')
-            u1.dateCreated = OffsetDateTime.parse('2018-10-10T01:00:00Z')
-            u1.enabled = false
-            u1.save()
-            User u2 = TestUtils.createUser('ROLE_YH', '13500000003')
-            u2.dateCreated = OffsetDateTime.parse('2018-10-11T01:00:00Z')
-            u2.save()
-            User u3 = TestUtils.createUser('ROLE_YH', '13500000004')
-            u3.dateCreated = OffsetDateTime.parse('2018-10-12T01:00:00Z')
-            u3.save()
+            User u1 = new User(username: '13500000002', password: '13500000002', displayName: '13500000002')
+            User u2 = new User(username: '13500000003', password: '13500000003', displayName: '13500000003')
+            User u3 = new User(username: '13500000004', password: '13500000004', displayName: '13500000004')
+            User u4 = new User(username: '13500000005', password: '13500000005', displayName: '13500000005')
+            autoTimestampEventListener.withoutDateCreated {
+                u4.dateCreated = OffsetDateTime.parse('1970-01-01T00:00:00Z')
+                u4.save()
+                u1.dateCreated = OffsetDateTime.parse('2018-10-10T01:00:00Z')
+                u1.enabled = false
+                u1.save()
+                u2.dateCreated = OffsetDateTime.parse('2018-10-11T01:00:00Z')
+                u2.save()
+                u3.dateCreated = OffsetDateTime.parse('2018-10-12T01:00:00Z')
+                u3.save()
+            }
         }
         String jwtAdmin = TestUtils.login(serverPort, '13500000000', '13500000000')
 
@@ -235,12 +240,12 @@ class ManagementFunctionalSpec extends Specification {
 
         where:
         query                                                                      | userCount | userList
-        'enabled=true'                                                             | 3         | ['13500000004', '13500000003', '13500000000']
+        'enabled=true'                                                             | 4         | ['13500000004', '13500000003', '13500000005', '13500000000']
         'enabled=false'                                                            | 1         | ['13500000002']
         'username=13500000002'                                                     | 1         | ['13500000002']
         'username=1360000'                                                         | 0         | []
-        'dateCreatedStart=2018-10-11T00:00:00Z'                                    | 2         | ['13500000004', '13500000003']
-        'dateCreatedEnd=2018-10-11 02:00:00'                                       | 3         | ['13500000003', '13500000002', '13500000000']
+        'dateCreatedStart=2018-10-11T00:00:00Z'                                    | 3         | ['13500000004', '13500000003', '13500000000']
+        'dateCreatedEnd=2018-10-11 02:00:00'                                       | 3         | ['13500000003', '13500000002', '13500000005']
         'dateCreatedStart=2018-10-10T00:00:00&dateCreatedEnd=2018-10-11T23:59:59Z' | 2         | ['13500000003', '13500000002']
         'dateCreatedStart=2018-10-20T00:00:00Z&dateCreatedEnd=2018-10-21T23:59:59' | 0         | []
     }

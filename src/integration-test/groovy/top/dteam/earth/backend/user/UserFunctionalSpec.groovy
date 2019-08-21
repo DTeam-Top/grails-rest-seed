@@ -2,10 +2,11 @@ package top.dteam.earth.backend.user
 
 import grails.core.GrailsApplication
 import grails.gorm.transactions.Rollback
+import grails.plugin.springsecurity.SpringSecurityService
 import grails.plugins.rest.client.RestBuilder
 import grails.plugins.rest.client.RestResponse
 import grails.testing.mixin.integration.Integration
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 import spock.lang.Specification
 import top.dteam.earth.backend.operation.Job
 import top.dteam.earth.backend.utils.TestUtils
@@ -16,6 +17,7 @@ class UserFunctionalSpec extends Specification {
 
     GrailsApplication grailsApplication
     UserService userService
+    SpringSecurityService springSecurityService
 
     void setup() {
         TestUtils.initEnv()
@@ -27,7 +29,7 @@ class UserFunctionalSpec extends Specification {
 
     void "password在持久化后需要加密"() {
         setup:
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder()
+        PasswordEncoder encoder = springSecurityService.passwordEncoder as PasswordEncoder
 
         when: 'insert'
         User user = new User(username: 13572211111, password: '123456', displayName: 'user')

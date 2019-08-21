@@ -1,4 +1,4 @@
-import grails.plugin.springsecurity.SpringSecurityService
+import org.grails.databinding.converters.Jsr310ConvertersConfiguration
 import top.dteam.earth.backend.converter.DateTimeValueConverter
 import top.dteam.earth.backend.user.LoginEventListener
 import top.dteam.earth.backend.user.LoginResponseJsonRender
@@ -14,12 +14,10 @@ beans = {
         authoritiesPropertyName = 'roles'
         useBearerToken = true
     }
-    springSecurityService(SpringSecurityService) {
-        authenticationTrustResolver = ref('authenticationTrustResolver')
-        grailsApplication = application
-        objectDefinitionSource = ref('objectDefinitionSource')
-        passwordEncoder = ref('passwordEncoder')
-    }
     loginEventListener(LoginEventListener)
+    // TODO: 等待官方修复ValueConverter缺失的issue: https://github.com/grails/grails-core/issues/11387
+    jsr310DataBinding(Jsr310ConvertersConfiguration) {
+        formatStrings = application.config.getProperty('grails.databinding.dateFormats', Set)
+    }
     dateTimeValueConverter(DateTimeValueConverter)
 }

@@ -2,7 +2,7 @@ package top.dteam.earth.backend.user
 
 import grails.gorm.services.Service
 import grails.gorm.transactions.Transactional
-import org.apache.commons.lang.RandomStringUtils
+import org.apache.commons.lang3.RandomStringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import top.dteam.earth.backend.converter.DateTimeValueConverter
 import top.dteam.earth.backend.operation.JobService

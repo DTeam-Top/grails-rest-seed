@@ -2,10 +2,10 @@ package top.dteam.earth.backend.user
 
 import grails.plugin.springsecurity.SpringSecurityService
 import groovy.util.logging.Slf4j
-import org.apache.commons.lang.RandomStringUtils
+import org.apache.commons.lang3.RandomStringUtils
 import org.grails.datastore.mapping.validation.ValidationException
 import org.grails.web.json.JSONObject
-import org.springframework.security.authentication.encoding.PasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 import top.dteam.earth.backend.operation.JobService
 
 import static org.springframework.http.HttpStatus.*
@@ -65,8 +65,8 @@ class UserController {
         try {
             if (request.JSON.oldPassword &&
                     request.JSON.newPassword &&
-                    (springSecurityService.passwordEncoder as PasswordEncoder).isPasswordValid(
-                            user.password, request.JSON.oldPassword, null)) {
+                    (springSecurityService.passwordEncoder as PasswordEncoder).matches(
+                            request.JSON.oldPassword, user.password)) {
                 user.password = request.JSON.newPassword
                 user.passwordExpired = false
                 userService.save(user)

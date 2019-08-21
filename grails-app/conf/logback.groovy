@@ -21,21 +21,6 @@ appender('STDOUT', ConsoleAppender) {
     }
 }
 
-appender("R_SQL", RollingFileAppender) {
-    file = "sql.log"
-    encoder(PatternLayoutEncoder) {
-        pattern = "%d %-5level %logger{36} - %msg%n"
-    }
-    rollingPolicy(FixedWindowRollingPolicy) {
-        fileNamePattern = "sql.log.%i"
-        minIndex = 1
-        maxIndex = 5
-    }
-    triggeringPolicy(SizeBasedTriggeringPolicy) {
-        maxFileSize = "10MB"
-    }
-}
-
 appender("R", RollingFileAppender) {
     file = "earth.log"
     encoder(PatternLayoutEncoder) {
@@ -68,6 +53,7 @@ final boolean DEBUG_SQL = System.getenv('DEBUG_SQL') as boolean
 
 root(valueOf(LOG_LEVEL), ['STDOUT', 'R'])
 logger('org', WARN)
+logger('io.micronaut', WARN)
 logger('grails.plugin.springsecurity', WARN)
 logger('grails', WARN)
 logger('com.zaxxer', WARN)
@@ -78,8 +64,8 @@ logger('org.springframework.security', WARN)
 logger('org.hibernate.orm.deprecation', ERROR)
 
 if (DEBUG_SQL) {
-    logger('org.hibernate.SQL', DEBUG, ['R_SQL'])
-    logger('org.hibernate.type', TRACE, ['R_SQL'])
+    logger('org.hibernate.SQL', DEBUG)
+    logger('org.hibernate.type', TRACE)
 } else {
     logger('org.hibernate.SQL', WARN)
 }
