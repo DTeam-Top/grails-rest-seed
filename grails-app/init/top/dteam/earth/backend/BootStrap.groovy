@@ -17,7 +17,7 @@ class BootStrap {
                 , gitProperties.shortCommitId
                 , gitProperties.branch
                 , gitProperties.commitTime
-                , gitProperties.getDate('build.time'))
+                , gitProperties.get('build.time'))
 
         environments {
             development {

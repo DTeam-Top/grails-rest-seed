@@ -3,9 +3,6 @@ grails:
     profile: rest-api
     codegen:
         defaultPackage: top.dteam.earth.backend
-    spring:
-        transactionManagement:
-            proxies: false
     gorm:
         reactor:
             # Whether to translate GORM events into Reactor events
@@ -18,23 +15,26 @@ info:
         version: '@info.app.version@'
         grailsVersion: '@info.app.grailsVersion@'
 spring:
+    jmx:
+        unique-names: true
     main:
         banner-mode: "off"
     groovy:
         template:
             check-template-location: false
-
-# Spring Actuator Endpoints are Disabled by Default
-endpoints:
-    enabled: false
-# enable /info endpoint
-#    info.enabled: true
-    jmx:
-        enabled: true
-
-# Show full git.properties, not only git.branch, git.commit.id, and git.commit.time
-# See: https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html#production-ready-application-info-git
-management.info.git.mode: full
+    devtools:
+        restart:
+            additional-exclude:
+                - '*.gsp'
+                - '**/*.gsp'
+                - '*.gson'
+                - '**/*.gson'
+                - 'logback.groovy'
+                - '*.properties'
+management:
+    info.git.mode: full
+    endpoints:
+        enabled-by-default: false
 
 aliyun:
     oss:
@@ -86,8 +86,6 @@ grails:
 ---
 hibernate:
     dialect: net.kaleidos.hibernate.PostgresqlExtensionsDialect
-    showSql: true
-    formatSql: true
     cache:
         queries: false
         use_second_level_cache: false
@@ -97,12 +95,10 @@ dataSource:
     pooled: true
     driverClassName: org.postgresql.Driver
     properties:
-        maximumPoolSize: 100
-        minimumIdle: 10
+        minimumIdle: 3
 
 ---
-server:
-    port: 9002
+server.port: 9002
 
 grails.controllers.upload:
     maxFileSize: ${UPLOAD_MAX_FILE_SIZE:52428800}

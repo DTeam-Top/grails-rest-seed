@@ -1,10 +1,12 @@
 package top.dteam.earth.backend.user
 
+import grails.compiler.GrailsCompileStatic
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 
 import java.time.OffsetDateTime
 
+@GrailsCompileStatic
 @EqualsAndHashCode(includes = 'username')
 @ToString(includes = 'username', includeNames = true, includePackage = false)
 class User implements Serializable {
@@ -36,7 +38,7 @@ class User implements Serializable {
 
     static constraints = {
         username nullable: false, blank: false, maxSize: 11, unique: true
-        password nullable: false, blank: false, password: true, maxSize: 64
+        password nullable: false, blank: false, password: true, maxSize: 70
         displayName nullable: false, blank: false, maxSize: 30, unique: true
     }
 

@@ -1,4 +1,4 @@
-import static org.grails.plugins.web.Java8GrailsPlugin.DEFAULT_JSR310_FORMATS
+import static org.grails.plugins.databinding.AbstractDataBindingGrailsPlugin.DEFAULT_DATE_FORMATS
 
 // 支持的时间日期格式:
 // 2018-01-01 00:00:00
@@ -34,4 +34,4 @@ grails.databinding.dateFormats = [
         , "yyyy-MM-dd'T'HH:mm:ss.SSS"
         , "yyyy-MM-dd'T'HH:mm:ss.SSSX"
         , "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"
-] + DEFAULT_JSR310_FORMATS
+] + DEFAULT_DATE_FORMATS

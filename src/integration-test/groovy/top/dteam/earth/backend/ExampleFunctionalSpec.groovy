@@ -1,9 +1,9 @@
 package top.dteam.earth.backend
 
+import grails.gorm.transactions.Rollback
 import grails.plugins.rest.client.RestBuilder
 import grails.plugins.rest.client.RestResponse
 import grails.testing.mixin.integration.Integration
-import grails.transaction.Rollback
 import spock.lang.Specification
 import spock.lang.Unroll
 
